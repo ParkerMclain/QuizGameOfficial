@@ -14,6 +14,8 @@
 		428633F720912E4C0092A79E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 428633F520912E4C0092A79E /* LaunchScreen.storyboard */; };
 		4286340220912E4C0092A79E /* QuizGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4286340120912E4C0092A79E /* QuizGameTests.swift */; };
 		4286340D20912E4C0092A79E /* QuizGameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4286340C20912E4C0092A79E /* QuizGameUITests.swift */; };
+		4286341B209138690092A79E /* SinglePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4286341A209138690092A79E /* SinglePlayer.swift */; };
+		4286341D2091392D0092A79E /* Multiplayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4286341C2091392D0092A79E /* Multiplayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		4286340820912E4C0092A79E /* QuizGameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuizGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4286340C20912E4C0092A79E /* QuizGameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizGameUITests.swift; sourceTree = "<group>"; };
 		4286340E20912E4C0092A79E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4286341A209138690092A79E /* SinglePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePlayer.swift; sourceTree = "<group>"; };
+		4286341C2091392D0092A79E /* Multiplayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Multiplayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,8 @@
 				428633EC20912E4C0092A79E /* AppDelegate.swift */,
 				428633EE20912E4C0092A79E /* ViewController.swift */,
 				428633F020912E4C0092A79E /* Main.storyboard */,
+				4286341C2091392D0092A79E /* Multiplayer.swift */,
+				4286341A209138690092A79E /* SinglePlayer.swift */,
 				428633F320912E4C0092A79E /* Assets.xcassets */,
 				428633F520912E4C0092A79E /* LaunchScreen.storyboard */,
 				428633F820912E4C0092A79E /* Info.plist */,
@@ -259,8 +265,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4286341D2091392D0092A79E /* Multiplayer.swift in Sources */,
 				428633EF20912E4C0092A79E /* ViewController.swift in Sources */,
 				428633ED20912E4C0092A79E /* AppDelegate.swift in Sources */,
+				4286341B209138690092A79E /* SinglePlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
