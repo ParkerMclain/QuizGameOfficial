@@ -42,34 +42,25 @@
                                     <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mOH-gi-6o3"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jWO-6J-Vj1">
-                                <rect key="frame" x="118" y="366" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Single"/>
-                                <connections>
-                                    <action selector="singleTouch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="B4Q-85-elP"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oxy-00-oh4">
-                                <rect key="frame" x="193" y="366" width="91" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Multiplayer"/>
-                                <connections>
-                                    <action selector="multiTouch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OHr-Gu-XNS"/>
-                                </connections>
-                            </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="quiz" translatesAutoresizingMaskIntoConstraints="NO" id="T55-zk-OSr">
                                 <rect key="frame" x="0.0" y="64" width="375" height="318"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bUb-Nw-ee2">
+                                <rect key="frame" x="60" y="390" width="255" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Single"/>
+                                    <segment title="Multiplayer"/>
+                                </segments>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="tgY-GP-5Eo"/>
                     <connections>
-                        <outlet property="Multiplayer" destination="oxy-00-oh4" id="y3H-8Q-LVl"/>
-                        <outlet property="Single" destination="jWO-6J-Vj1" id="aaK-1f-wg2"/>
+                        <outlet property="singleMultiController" destination="bUb-Nw-ee2" id="nY0-W4-csP"/>
                         <segue destination="pGT-yV-Jmg" kind="show" identifier="Single" id="Du8-98-VgR"/>
                         <segue destination="cdg-aH-NRB" kind="show" identifier="Multiplayer" id="pfM-29-G8o"/>
                     </connections>

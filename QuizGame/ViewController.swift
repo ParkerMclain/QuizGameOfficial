@@ -14,30 +14,19 @@ class ViewController: UIViewController, MCBrowserViewControllerDelegate, MCSessi
     var peerID: MCPeerID!
     var browser: MCBrowserViewController!
     var assistant: MCAdvertiserAssistant!
-    var selected: String!
-    @IBOutlet weak var Single: UIButton!
-    @IBOutlet weak var Multiplayer: UIButton!
-    @IBAction func singleTouch(_ sender: UIButton) {
-        var thing = Single
-        var thing2 = Multiplayer
-        thing?.backgroundColor = UIColor.black
-        thing2?.backgroundColor = UIColor.clear
-        selected = Single.currentTitle
-    }
-    @IBAction func multiTouch(_ sender: Any) {
-        var thing = Single
-        var thing2 = Multiplayer
-        thing?.backgroundColor = UIColor.clear
-        thing2?.backgroundColor = UIColor.black
-        selected = Multiplayer.currentTitle
-        
-    }
+    //Segmented controller for Single or Multiplayer
+    @IBOutlet weak var singleMultiController: UISegmentedControl!
+    
+    
+    
     @IBAction func start(_ sender: Any) {
-        if selected == "Single"
+        
+        
+        if singleMultiController.selectedSegmentIndex == 0 //Index 0 is Single player
         {
-        self.performSegue(withIdentifier: "Single", sender: self)
+            self.performSegue(withIdentifier: "Single", sender: self)
         }
-        else if selected == "Multiplayer"
+        else if singleMultiController.selectedSegmentIndex == 1 //Index 1 is Multiplayer
         {
             self.performSegue(withIdentifier: "Multiplayer", sender: self)
         }
@@ -46,7 +35,7 @@ class ViewController: UIViewController, MCBrowserViewControllerDelegate, MCSessi
         if(segue.identifier == "Single")
         {
             var controll = segue.destination as! SinglePlayer
-        
+            
             
             
         }
@@ -84,17 +73,17 @@ class ViewController: UIViewController, MCBrowserViewControllerDelegate, MCSessi
         
     }
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    
 }
 
