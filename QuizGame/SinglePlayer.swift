@@ -133,10 +133,8 @@ class SinglePlayer: UIViewController {
         clearButtonBorders()
         if waiting3Seconds == true
         {
-            buttonA.isEnabled = true
-            buttonB.isEnabled = true
-            buttonC.isEnabled = true
-            buttonD.isEnabled = true
+            enableButtons()
+            
             waiting3Seconds = false
         }
         
@@ -169,11 +167,25 @@ class SinglePlayer: UIViewController {
         print("No more questions!")
         timerNotificationLabel.isHidden = true
         
+        disableButtons()
+        
+    }
+    
+    
+    func disableButtons()
+    {
         buttonA.isEnabled = false
         buttonB.isEnabled = false
         buttonC.isEnabled = false
         buttonD.isEnabled = false
-        
+    }
+    
+    func enableButtons()
+    {
+        buttonA.isEnabled = true
+        buttonB.isEnabled = true
+        buttonC.isEnabled = true
+        buttonD.isEnabled = true
     }
     
     
@@ -267,10 +279,7 @@ class SinglePlayer: UIViewController {
         seconds = 23
         //gameTimer.fire()
         
-        buttonA.isEnabled = false
-        buttonB.isEnabled = false
-        buttonC.isEnabled = false
-        buttonD.isEnabled = false
+        disableButtons()
         
         clearButtonBorders()
         let correct = quizGame[currentQuestionNumber].questionAnswer
@@ -349,10 +358,7 @@ class SinglePlayer: UIViewController {
         
         timerNotificationLabel.isHidden = false
         
-        buttonA.isEnabled = true
-        buttonB.isEnabled = true
-        buttonC.isEnabled = true
-        buttonD.isEnabled = true
+        enableButtons()
     }
     
     func testPrintArray()
