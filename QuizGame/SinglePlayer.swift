@@ -15,6 +15,14 @@ class SinglePlayer: UIViewController {
     var questionsTopic: String!
     var currentQuestionNumber: Int!
     
+    var buttonAclicks: Int!
+    var buttonBclicks: Int!
+    var buttonCclicks: Int!
+    var buttonDclicks: Int!
+    
+    var score: Int!
+    
+    
     //Game timer
     var gameTimer = Timer()
     var overallTimer = Timer()
@@ -57,9 +65,14 @@ class SinglePlayer: UIViewController {
         buttonC.tag = 2
         buttonD.tag = 3
         
+        
+        score = 0
+        
         //Sets game to begin with question 1
         currentQuestionNumber = 0
         waiting3Seconds = false
+        
+        resetClicks()
         
         setButtonBorders()
         clearButtonBorders()
@@ -105,6 +118,50 @@ class SinglePlayer: UIViewController {
         clearButtonBorders()
         sender.layer.borderColor = UIColor.red.cgColor
         
+        
+        
+        
+        
+        switch sender.tag {
+        case 0:
+            if buttonAclicks == 0
+            {
+                resetClicks()
+            }
+            buttonAclicks = buttonAclicks + 1
+        case 1:
+            if buttonBclicks == 0
+            {
+                resetClicks()
+            }
+            buttonBclicks = buttonBclicks + 1
+        case 2:
+            if buttonCclicks == 0
+            {
+                resetClicks()
+            }
+            buttonCclicks = buttonCclicks + 1
+        case 3:
+            if buttonDclicks == 0
+            {
+                resetClicks()
+            }
+            buttonDclicks = buttonDclicks + 1
+        default:
+            print("Error")
+        }
+        
+        if buttonAclicks == 2 || buttonBclicks == 2 || buttonCclicks == 2 || buttonDclicks == 2
+        {
+            print("Submitted")
+            checkAnswer(selectedButton: sender.tag)
+            attemptToLoadNextQuestion()
+        }
+        
+    }
+    
+    func checkAnswer(selectedButton: Int)
+    {
         let correct = quizGame[currentQuestionNumber].questionAnswer
         var number: Int = -1
         
@@ -121,12 +178,26 @@ class SinglePlayer: UIViewController {
             number = -1
         }
         
-        if sender.tag == number
+        if selectedButton == number
         {
-            attemptToLoadNextQuestion()
+            score = score + 1
+            print("Correct")
         }
-        
+        else
+        {
+            print("Wrong")
+        }
     }
+    
+    
+    func resetClicks()
+    {
+        buttonAclicks = 0
+        buttonBclicks = 0
+        buttonCclicks = 0
+        buttonDclicks = 0
+    }
+    
     
     func attemptToLoadNextQuestion()
     {
@@ -145,6 +216,7 @@ class SinglePlayer: UIViewController {
             seconds = 20
             startTimer()
             loadQuestion()
+            resetClicks()
         }
         else
         {
@@ -165,9 +237,18 @@ class SinglePlayer: UIViewController {
         gameEnded = true
         restartButton.isHidden = false
         print("No more questions!")
-        timerNotificationLabel.isHidden = true
+        //timerNotificationLabel.isHidden = true
         
         disableButtons()
+        
+        if score > 0
+        {
+            timerNotificationLabel.text = "YOU WON!"
+        }
+        else
+        {
+            timerNotificationLabel.text = "YOU LOST!"
+        }
         
     }
     
@@ -304,7 +385,7 @@ class SinglePlayer: UIViewController {
     func getJSONData()
     {
         let semaphore = DispatchSemaphore(value: 0);
-        let urlString = "http://www.people.vcu.edu/~ebulut/jsonFiles/quiz2.json"
+        let urlString = "http://www.people.vcu.edu/~ebulut/jsonFiles/quiz1.json"
         
         
         let url = URL(string: urlString)
@@ -346,6 +427,7 @@ class SinglePlayer: UIViewController {
         setButtonBorders()
         clearButtonBorders()
         
+        score = 0
         
         //Start game timer
         seconds = 20
