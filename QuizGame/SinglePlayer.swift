@@ -121,7 +121,7 @@ class SinglePlayer: UIViewController {
                 }
                 else if(buttonD.layer.borderColor == UIColor.red.cgColor)
                 {
-                    buttonB.layer.borderColor == UIColor.red.cgColor
+                    buttonB.layer.borderColor = UIColor.red.cgColor
                 }
             }
             else if rotate.x > 3.0
@@ -133,7 +133,7 @@ class SinglePlayer: UIViewController {
                 }
                 else if(buttonB.layer.borderColor == UIColor.red.cgColor)
                 {
-                    buttonD.layer.borderColor == UIColor.red.cgColor
+                    buttonD.layer.borderColor = UIColor.red.cgColor
                 }
             }
             else if rotate.y < -3.0
@@ -145,7 +145,7 @@ class SinglePlayer: UIViewController {
                 }
                 else if(buttonD.layer.borderColor == UIColor.red.cgColor)
                 {
-                    buttonC.layer.borderColor == UIColor.red.cgColor
+                    buttonC.layer.borderColor = UIColor.red.cgColor
                 }
             }
             else if rotate.y > 3.0
@@ -157,9 +157,34 @@ class SinglePlayer: UIViewController {
                 }
                 else if(buttonC.layer.borderColor == UIColor.red.cgColor)
                 {
-                    buttonD.layer.borderColor == UIColor.red.cgColor
+                    buttonD.layer.borderColor = UIColor.red.cgColor
                 }
             }
+        }
+    }
+    
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        //Randomize selection when shaking
+        var rand = Int(arc4random_uniform(3))
+        if motion == .motionShake{
+            switch rand
+            {
+            case 0:
+                clearButtonBorders()
+                buttonA.layer.borderColor = UIColor.red.cgColor
+            case 1:
+                clearButtonBorders()
+                buttonB.layer.borderColor = UIColor.red.cgColor
+            case 2:
+                clearButtonBorders()
+                buttonC.layer.borderColor = UIColor.red.cgColor
+            case 3:
+                clearButtonBorders()
+                buttonD.layer.borderColor = UIColor.red.cgColor
+            default:
+                clearButtonBorders()
+            }
+           // self.checkAnswer(selectedButton: rand)
         }
     }
     func setButtonBorders()
@@ -229,8 +254,13 @@ class SinglePlayer: UIViewController {
         if buttonAclicks == 2 || buttonBclicks == 2 || buttonCclicks == 2 || buttonDclicks == 2
         {
             print("Submitted")
+          
             checkAnswer(selectedButton: sender.tag)
-            attemptToLoadNextQuestion()
+            //Shows the answer
+            Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(showCorrectAnswer), userInfo: nil,repeats: false)
+            //Waits 3 secounds before laoding next answer
+            Timer.scheduledTimer(timeInterval: 3.1, target: self, selector: #selector(attemptToLoadNextQuestion), userInfo: nil,repeats: false)
+          
         }
         
     }
@@ -257,11 +287,15 @@ class SinglePlayer: UIViewController {
         {
             score = score + 1
             possibleScore +=  1
+            //Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(showCorrectAnswer), userInfo: nil,repeats: false)
+            //showCorrectAnswer()
             print("Correct")
         }
         else
         {
             possibleScore +=  1
+           // Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(showCorrectAnswer), userInfo: nil,repeats: false)
+            
             print("Wrong")
         }
     }
@@ -276,7 +310,7 @@ class SinglePlayer: UIViewController {
     }
     
     
-    func attemptToLoadNextQuestion()
+    @objc func attemptToLoadNextQuestion()
     {
         clearButtonBorders()
         if waiting3Seconds == true
@@ -368,7 +402,9 @@ class SinglePlayer: UIViewController {
                 //This is where we will need to call a function to end the current question
                 timerNotificationLabel.text = "\(seconds)"
                 //gameTimer.invalidate()
-                showCorrectAnswer()
+               Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(showCorrectAnswer), userInfo: nil,repeats: false)
+                possibleScore += 1
+                Timer.scheduledTimer(timeInterval: 3.1, target: self, selector: #selector(attemptToLoadNextQuestion), userInfo: nil,repeats: false)
             }
             else
             {
@@ -432,7 +468,7 @@ class SinglePlayer: UIViewController {
         }
     }
     
-    func showCorrectAnswer()
+    @objc func showCorrectAnswer()
     {
         seconds = 23
         //gameTimer.fire()
@@ -443,13 +479,13 @@ class SinglePlayer: UIViewController {
         let correct = quizGame[currentQuestionNumber].questionAnswer
         switch correct {
         case "A":
-            buttonA.layer.borderColor = UIColor.red.cgColor
+            buttonA.layer.borderColor = UIColor.green.cgColor
         case "B":
-            buttonB.layer.borderColor = UIColor.red.cgColor
+            buttonB.layer.borderColor = UIColor.green.cgColor
         case "C":
-            buttonC.layer.borderColor = UIColor.red.cgColor
+            buttonC.layer.borderColor = UIColor.green.cgColor
         case "D":
-            buttonD.layer.borderColor = UIColor.red.cgColor
+            buttonD.layer.borderColor = UIColor.green.cgColor
         default:
             print("Error.")
         }

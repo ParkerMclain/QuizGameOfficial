@@ -8,14 +8,20 @@
 
 import UIKit
 import MultipeerConnectivity
+
 class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionDelegate {
-    //player 1 will awlays be in color
+    //Player 1 will awlays be in color
+    //Players
+    @IBOutlet weak var player1: UIImageView! //red
     @IBOutlet weak var player2: UIImageView! //yellow
     @IBOutlet weak var player3: UIImageView! //green
     @IBOutlet weak var player4: UIImageView! //blue
     
     //Multiplayer Session
     var session: MCSession!
+    var peerID: MCPeerID!
+    var browser: MCBrowserViewController!
+     var assistant: MCAdvertiserAssistant!
     
     //Quiz
     var quizGame = [Question]()
@@ -30,14 +36,38 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
     //players
     var players =  [Player]()
     
+    @IBAction func connect(_ sender: Any) {
+         present(browser, animated: true, completion: nil)
+       
+      
+    
+    }
+    
+    
+    func canStart() -> Bool{
+        return players.count > 1 && players.count <= 4
+    }
+    
     func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
-        
+        dismiss(animated: true, completion: nil)
+        updatePlayers(id: peerID)
+     
     }
     
     func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {
+        dismiss(animated: true, completion: nil)
         
     }
-    
+    func updatePlayers( id: MCPeerID){
+        if id == peerID
+        {
+            
+        }
+        else
+        {
+            self.player2.image = UIImage(named: "yellow")
+        }
+    }
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         
     }
@@ -88,6 +118,16 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         player3.image = process //Grays player 3
         
         player4.image = process //Grays player 4
+        self.peerID = MCPeerID(displayName: UIDevice.current.name)
+        self.session = MCSession(peer: peerID)
+        self.browser = MCBrowserViewController(serviceType: "chat", session: session)
+        self.assistant = MCAdvertiserAssistant(serviceType: "chat", discoveryInfo: nil, session: session)
+        
+        assistant.start()
+        session.delegate = self
+        browser.delegate = self
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
