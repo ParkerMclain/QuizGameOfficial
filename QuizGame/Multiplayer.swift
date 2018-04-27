@@ -43,6 +43,15 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
     
     }
     
+    @IBAction func start(_ sender: Any) {
+        if  canStart() == false {
+            print("Can't start")
+        }
+        else
+        {
+            self.performSegue(withIdentifier: "MultiplayerGame", sender: self)
+        }
+    }
     
     func canStart() -> Bool{
         return players.count > 1 && players.count <= 4
@@ -107,12 +116,13 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
     override func viewDidLoad() {
         super.viewDidLoad()
         let context = CIContext(options: nil)
-        
+        //Gray Filtering
         let currentFilter = CIFilter(name: "CIPhotoEffectNoir")
         currentFilter!.setValue(CIImage(image: player2.image!), forKey: kCIInputImageKey)
         let output = currentFilter!.outputImage
         let cgImg = context.createCGImage(output!, from: output!.extent)
         let process = UIImage(cgImage: cgImg!)
+        
         player2.image = process //Grays player 2
         
         player3.image = process //Grays player 3
@@ -245,6 +255,7 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
      */
     
 }
+//Possible Player Class
 class Player {
     var peerId: MCPeerID
     

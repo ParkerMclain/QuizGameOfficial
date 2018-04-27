@@ -98,6 +98,7 @@ class SinglePlayer: UIViewController {
         self.motionManager.deviceMotionUpdateInterval = 1/60
         self.motionManager.startDeviceMotionUpdates(using: .xArbitraryCorrectedZVertical)
         Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(updateMotion), userInfo: nil,repeats: true)
+        seconds = 20
     }
     //Tried to write motion, needs testing, Can't know whats wrong yet
     @objc func updateMotion(){
@@ -618,7 +619,11 @@ class SinglePlayer: UIViewController {
         attemptToLoadNextQuestion()
     }
     
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        score = 0
+        possibleScore = 0
+        gameTimer.invalidate()
+    }
     /*
      // MARK: - Navigation
      
