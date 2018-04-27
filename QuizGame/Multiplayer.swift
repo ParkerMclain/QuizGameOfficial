@@ -9,9 +9,10 @@
 import UIKit
 import MultipeerConnectivity
 class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionDelegate {
-    @IBOutlet weak var player2: UIImageView!
-    @IBOutlet weak var player3: UIImageView!
-    @IBOutlet weak var player4: UIImageView!
+    //player 1 will awlays be in color
+    @IBOutlet weak var player2: UIImageView! //yellow
+    @IBOutlet weak var player3: UIImageView! //green
+    @IBOutlet weak var player4: UIImageView! //blue
     
     //Multiplayer Session
     var session: MCSession!
