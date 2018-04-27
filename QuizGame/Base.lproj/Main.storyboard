@@ -76,13 +76,46 @@
                     <view key="view" contentMode="scaleToFill" id="4cA-7n-gzP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qoS-9D-4ho">
+                                <rect key="frame" x="158" y="522" width="59" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Connect"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZCw-jf-QTO">
+                                <rect key="frame" x="148" y="451" width="78" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Start Game"/>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="red" translatesAutoresizingMaskIntoConstraints="NO" id="qhA-1p-8pf">
+                                <rect key="frame" x="0.0" y="215" width="86" height="71"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="yellow" translatesAutoresizingMaskIntoConstraints="NO" id="Eyp-ug-gVl">
+                                <rect key="frame" x="94" y="215" width="86" height="71"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="green" translatesAutoresizingMaskIntoConstraints="NO" id="8AZ-ea-G1S">
+                                <rect key="frame" x="188" y="215" width="86" height="71"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="blue" translatesAutoresizingMaskIntoConstraints="NO" id="Unh-gJ-hHg">
+                                <rect key="frame" x="289" y="215" width="86" height="71"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="oNU-Cg-rYZ"/>
                     </view>
+                    <connections>
+                        <outlet property="player2" destination="Eyp-ug-gVl" id="LUk-j6-DUK"/>
+                        <outlet property="player3" destination="8AZ-ea-G1S" id="zDO-Qn-u3P"/>
+                        <outlet property="player4" destination="Unh-gJ-hHg" id="gem-vh-nmh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TrF-Fy-p7I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="118" y="860"/>
+            <point key="canvasLocation" x="117.59999999999999" y="859.52023988005999"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="vQT-zU-HX5">
@@ -202,6 +235,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="blue" width="300" height="300"/>
+        <image name="green" width="225" height="225"/>
         <image name="quiz" width="1024" height="1024"/>
+        <image name="red" width="300" height="300"/>
+        <image name="yellow" width="300" height="300"/>
     </resources>
 </document>

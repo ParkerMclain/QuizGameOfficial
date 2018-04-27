@@ -7,8 +7,9 @@
 //
 
 import UIKit
-
+import CoreMotion
 class SinglePlayer: UIViewController {
+    
     
     var quizGame = [Question]()
     var numberOfTotalQuestions: Int!
@@ -21,7 +22,9 @@ class SinglePlayer: UIViewController {
     var buttonDclicks: Int!
     
     var score: Int!
+    var possibleScore = Int()
     
+    var currentUrlString = String()
     
     //Game timer
     var gameTimer = Timer()
@@ -33,6 +36,10 @@ class SinglePlayer: UIViewController {
     var timeStamp: Int!
     var gameEnded: Bool!
     
+    //Manages tilt and stuff
+    var motionManager: CMMotionManager!
+    
+    var selected = String()
     
     @IBOutlet weak var questionNumberLabel: UILabel!
     
@@ -84,9 +91,77 @@ class SinglePlayer: UIViewController {
         getJSONData()
         
         loadQuestion()
+        self.motionManager = CMMotionManager()
         
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        self.motionManager.deviceMotionUpdateInterval = 1/60
+        self.motionManager.startDeviceMotionUpdates(using: .xArbitraryCorrectedZVertical)
+        Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(updateMotion), userInfo: nil,repeats: true)
+    }
+    //Tried to write motion, needs testing, Can't know whats wrong yet
+    @objc func updateMotion(){
+        if let user = self.motionManager.deviceMotion{
+            let orientation = user.attitude //Orientation of body relative to frame
+            let accel = user.userAcceleration
+            let gravity = user.gravity
+            let rotate = user.rotationRate
+            
+            if accel.z > 2.5 || orientation.yaw > 1.0 || orientation.yaw < -1.0
+            {
+                self.submitSelection(accel)
+                return
+            }
+            if rotate.x < -3.0
+            {
+                clearButtonBorders()
+                if(buttonC.layer.borderColor == UIColor.red.cgColor )
+                {
+                    buttonA.layer.borderColor = UIColor.red.cgColor
+                }
+                else if(buttonD.layer.borderColor == UIColor.red.cgColor)
+                {
+                    buttonB.layer.borderColor == UIColor.red.cgColor
+                }
+            }
+            else if rotate.x > 3.0
+            {
+                clearButtonBorders()
+                if(buttonA.layer.borderColor == UIColor.red.cgColor )
+                {
+                    buttonC.layer.borderColor = UIColor.red.cgColor
+                }
+                else if(buttonB.layer.borderColor == UIColor.red.cgColor)
+                {
+                    buttonD.layer.borderColor == UIColor.red.cgColor
+                }
+            }
+            else if rotate.y < -3.0
+            {
+                clearButtonBorders()
+                if(buttonB.layer.borderColor == UIColor.red.cgColor )
+                {
+                    buttonA.layer.borderColor = UIColor.red.cgColor
+                }
+                else if(buttonD.layer.borderColor == UIColor.red.cgColor)
+                {
+                    buttonC.layer.borderColor == UIColor.red.cgColor
+                }
+            }
+            else if rotate.y > 3.0
+            {
+                clearButtonBorders()
+                if(buttonA.layer.borderColor == UIColor.red.cgColor )
+                {
+                    buttonB.layer.borderColor = UIColor.red.cgColor
+                }
+                else if(buttonC.layer.borderColor == UIColor.red.cgColor)
+                {
+                    buttonD.layer.borderColor == UIColor.red.cgColor
+                }
+            }
+        }
+    }
     func setButtonBorders()
     {
         buttonA.layer.borderWidth = 5
@@ -181,10 +256,12 @@ class SinglePlayer: UIViewController {
         if selectedButton == number
         {
             score = score + 1
+            possibleScore +=  1
             print("Correct")
         }
         else
         {
+            possibleScore +=  1
             print("Wrong")
         }
     }
@@ -243,7 +320,7 @@ class SinglePlayer: UIViewController {
         
         if score > 0
         {
-            timerNotificationLabel.text = "YOU WON!"
+            timerNotificationLabel.text = "YOU WON! You scored \(score!)/\(possibleScore)"
         }
         else
         {
@@ -386,7 +463,38 @@ class SinglePlayer: UIViewController {
     {
         let semaphore = DispatchSemaphore(value: 0);
         let urlString = "http://www.people.vcu.edu/~ebulut/jsonFiles/quiz1.json"
+        currentUrlString = urlString
         
+        let url = URL(string: urlString)
+        
+        let session = URLSession.shared
+        
+        // create a data task
+        let task = session.dataTask(with: url!, completionHandler: { (data, response, error) in
+            
+            if let result = data{
+                do{
+                    let object = try JSONSerialization.jsonObject(with: result, options: .allowFragments)
+                    
+                    if let dictionary = object as? [String: AnyObject] {
+                        self.readJSONData(dictionary)
+                    }
+                }
+                catch{
+                    print("Error")
+                }
+                semaphore.signal()
+            }
+            
+        })
+        task.resume()
+        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
+    }
+    func getJSONData2()
+    {
+        let semaphore = DispatchSemaphore(value: 0);
+        let urlString = "http://www.people.vcu.edu/~ebulut/jsonFiles/quiz2.json"
+        currentUrlString = urlString
         
         let url = URL(string: urlString)
         
@@ -428,14 +536,20 @@ class SinglePlayer: UIViewController {
         clearButtonBorders()
         
         score = 0
-        
+        possibleScore = 0
         //Start game timer
         seconds = 20
         
         quizGame.removeAll()
         
-        getJSONData()
-        
+        if(currentUrlString == "http://www.people.vcu.edu/~ebulut/jsonFiles/quiz1.json" )
+        {
+            getJSONData2()
+        }
+        else if(currentUrlString == "http://www.people.vcu.edu/~ebulut/jsonFiles/quiz2.json")
+        {
+            getJSONData()
+        }
         loadQuestion()
         
         timerNotificationLabel.isHidden = false
@@ -460,6 +574,12 @@ class SinglePlayer: UIViewController {
         buttonB.setTitle(quizGame[currentQuestionNumber].questionOptionB, for: .normal)
         buttonC.setTitle(quizGame[currentQuestionNumber].questionOptionC, for: .normal)
         buttonD.setTitle(quizGame[currentQuestionNumber].questionOptionD, for: .normal)
+    }
+    
+    @IBAction func submitSelection(_ sender: Any) {
+        
+        checkAnswer(selectedButton: (sender as AnyObject).tag)
+        attemptToLoadNextQuestion()
     }
     
     
@@ -496,3 +616,4 @@ class Question {
         questionAnswer = answer
     }
 }
+
