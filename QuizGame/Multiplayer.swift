@@ -76,13 +76,13 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var context = CIContext(options: nil)
+        let context = CIContext(options: nil)
         
-        var currentFilter = CIFilter(name: "CIPhotoEffectNoir")
+        let currentFilter = CIFilter(name: "CIPhotoEffectNoir")
         currentFilter!.setValue(CIImage(image: player2.image!), forKey: kCIInputImageKey)
-        var output = currentFilter!.outputImage
-        var cgImg = context.createCGImage(output!, from: output!.extent)
-        var process = UIImage(cgImage: cgImg!)
+        let output = currentFilter!.outputImage
+        let cgImg = context.createCGImage(output!, from: output!.extent)
+        let process = UIImage(cgImage: cgImg!)
         player2.image = process //Grays player 2
         
         player3.image = process //Grays player 3
@@ -96,7 +96,7 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
     }
     func readJSONData(_ object: [String: AnyObject]) {
         
-        //print(object)
+        
         
         if let topic = object["topic"] as? String, let numberOfQuestions = object["numberOfQuestions"] as? Int, let questions = object["questions"] as? [[String: AnyObject]] {
             
@@ -121,8 +121,7 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
                 let correctAnswer = questions["correctOption"] as! String
                 
                 quizGame.append(Question(number: number, question: question, optionA: optionAA, optionB: optionBB, optionC: optionCC, optionD: optionDD, answer: correctAnswer))
-                
-                //print("Number: \(questions["number"]!) Sentence: \(questions["questionSentence"]!)")
+           
                 
             }
             
