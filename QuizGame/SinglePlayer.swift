@@ -34,6 +34,7 @@ class SinglePlayer: UIViewController {
     //Game timer
     var gameTimer = Timer()
     var overallTimer = Timer()
+    var actionTimer = Timer()
     
     //Initalize game timer to 20
     var seconds = 20
@@ -41,8 +42,10 @@ class SinglePlayer: UIViewController {
     var timeStamp: Int!
     var gameEnded: Bool!
     
-    //Manages tilt and stuff
-    var motionManager: CMMotionManager!
+    //Manages motion
+    let motionManager = CMMotionManager()
+    var time = 3
+    var time2 = 0
     
     var selected = String()
     
@@ -96,102 +99,131 @@ class SinglePlayer: UIViewController {
         getJSONData()
         
         loadQuestion()
-        self.motionManager = CMMotionManager()
-        
+   
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+         
         self.motionManager.deviceMotionUpdateInterval = 1/60
-        self.motionManager.startDeviceMotionUpdates(using: .xArbitraryCorrectedZVertical)
-        Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(updateMotion), userInfo: nil,repeats: true)
+        self.motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical)
+        actionTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(updateMotion), userInfo: nil,repeats: true)
         seconds = 20
     }
     //Tried to write motion, needs testing, Can't know whats wrong yet
     @objc func updateMotion(){
-        if let user = self.motionManager.deviceMotion{
+        time = 3
+        if let user = motionManager.deviceMotion{
             let orientation = user.attitude //Orientation of body relative to frame
             let accel = user.userAcceleration
             let gravity = user.gravity
             let rotate = user.rotationRate
-            
+            //print("in use")
             if accel.z > 2.5 || orientation.yaw > 1.0 || orientation.yaw < -1.0
             {
                 if(answerASelect == true)
                 {
-                     self.submitSelection(buttonA.tag)
+                   submitSelection(buttonA.tag)
+                    actionTimer.invalidate()
+                    overallTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(updateGlobalTimer)), userInfo: nil, repeats: true)
+                   
+                    
                 }
                 else if(answerBSelect == true)
                 {
-                    self.submitSelection(buttonB.tag)
+                    submitSelection(buttonB.tag)
+                    actionTimer.invalidate()
+                    overallTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(updateGlobalTimer)), userInfo: nil, repeats: true)
+                    
+                   
                 }
                 else if(answerCSelect == true)
                 {
-                    self.submitSelection(buttonB.tag)
+                    submitSelection(buttonC.tag)
+                    actionTimer.invalidate()
+                    overallTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(updateGlobalTimer)), userInfo: nil, repeats: true)
+                    
+                    
                 }
                 else if(answerDSelect == true)
                 {
-                    self.submitSelection(buttonB.tag)
+                    submitSelection(buttonD.tag)
+                    actionTimer.invalidate()
+                      overallTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(updateGlobalTimer)), userInfo: nil, repeats: true)
+                    
+                    
+                    
                 }
                 
                 return
             }
             if rotate.x < -3.0
             {
-                clearButtonBorders()
-                clearSelection()
+                
                 if(buttonC.layer.borderColor == UIColor.red.cgColor )
                 {
-                    
+                    clearButtonBorders()
+                    clearSelection()
                     buttonA.layer.borderColor = UIColor.red.cgColor
                     answerASelect = true
                 }
                 else if(buttonD.layer.borderColor == UIColor.red.cgColor)
                 {
+                    clearButtonBorders()
+                    clearSelection()
                     buttonB.layer.borderColor = UIColor.red.cgColor
                     answerBSelect = true
                 }
             }
             else if rotate.x > 3.0
             {
-                clearButtonBorders()
-                  clearSelection()
+               
                 if(buttonA.layer.borderColor == UIColor.red.cgColor )
                 {
+                    clearButtonBorders()
+                    clearSelection()
                     buttonC.layer.borderColor = UIColor.red.cgColor
                     answerCSelect = true
                 }
                 else if(buttonB.layer.borderColor == UIColor.red.cgColor)
                 {
+                    clearButtonBorders()
+                    clearSelection()
                     buttonD.layer.borderColor = UIColor.red.cgColor
                     answerDSelect = true
                 }
             }
             else if rotate.y < -3.0
             {
-                clearButtonBorders()
-                  clearSelection()
+                
                 if(buttonB.layer.borderColor == UIColor.red.cgColor )
                 {
+                    clearButtonBorders()
+                    clearSelection()
                     buttonA.layer.borderColor = UIColor.red.cgColor
                     answerASelect = true
                 }
                 else if(buttonD.layer.borderColor == UIColor.red.cgColor)
                 {
+                    clearButtonBorders()
+                    clearSelection()
                     buttonC.layer.borderColor = UIColor.red.cgColor
                     answerCSelect = true
                 }
             }
             else if rotate.y > 3.0
             {
-                clearButtonBorders()
-                  clearSelection()
+                
                 if(buttonA.layer.borderColor == UIColor.red.cgColor )
                 {
+                    clearButtonBorders()
+                    clearSelection()
                     buttonB.layer.borderColor = UIColor.red.cgColor
                     answerBSelect = true
                 }
                 else if(buttonC.layer.borderColor == UIColor.red.cgColor)
                 {
+                    clearButtonBorders()
+                    clearSelection()
                     buttonD.layer.borderColor = UIColor.red.cgColor
                     answerDSelect = true
                 }
@@ -469,11 +501,18 @@ class SinglePlayer: UIViewController {
         }
     }
     
+    @objc func updateGlobalTimer(){
+        time = time - 1
+        if time == 0 {
+            //overallTimer.invalidate()
+            actionTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(updateMotion), userInfo: nil,repeats: true)
+        }
+    }
     func startTimer()
     {
         timerNotificationLabel.text = "\(seconds)"
         gameTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(SinglePlayer.updateTimer)), userInfo: nil, repeats: true)
-        //overallTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(SinglePlayer.updateTimer)), userInfo: nil, repeats: true)
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -664,16 +703,21 @@ class SinglePlayer: UIViewController {
         buttonD.setTitle(quizGame[currentQuestionNumber].questionOptionD, for: .normal)
     }
     
-    @IBAction func submitSelection(_ sender: Any) {
+    @objc func submitSelection(_ sender: Int) {
         
-        checkAnswer(selectedButton: (sender as AnyObject).tag)
-        attemptToLoadNextQuestion()
+        
+        checkAnswer(selectedButton: sender)
+        Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(showCorrectAnswer), userInfo: nil,repeats: false)
+        //Waits 3 secounds before laoding next answer
+        Timer.scheduledTimer(timeInterval: 3.1, target: self, selector: #selector(attemptToLoadNextQuestion), userInfo: nil,repeats: false)
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         score = 0
         possibleScore = 0
         gameTimer.invalidate()
+        motionManager.stopDeviceMotionUpdates()
     }
     /*
      // MARK: - Navigation
