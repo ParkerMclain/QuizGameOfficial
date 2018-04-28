@@ -86,16 +86,7 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         DispatchQueue.main.async(execute: {
             //let playerIndex = (self.getPlayerIndex(by:peerID))!
             if let receivedString = NSKeyedUnarchiver.unarchiveObject(with: data) as? String {
-                switch receivedString {
-                case "NEW_GAME":
-                    print("hi")
-                    //self.game?.loadNewQuiz()
-                    
-                case "GO_BACK":
-                    _ = self.navigationController?.popViewController(animated: true)
-                default:
-                    print("hi")
-                }
+               
             }
         })
     }

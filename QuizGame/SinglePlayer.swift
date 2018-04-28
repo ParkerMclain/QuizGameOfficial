@@ -21,6 +21,11 @@ class SinglePlayer: UIViewController {
     var buttonCclicks: Int!
     var buttonDclicks: Int!
     
+    var answerASelect = Bool()
+    var answerBSelect = Bool()
+    var answerCSelect = Bool()
+    var answerDSelect = Bool()
+    
     var score: Int!
     var possibleScore = Int()
     
@@ -95,6 +100,7 @@ class SinglePlayer: UIViewController {
         
     }
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.motionManager.deviceMotionUpdateInterval = 1/60
         self.motionManager.startDeviceMotionUpdates(using: .xArbitraryCorrectedZVertical)
         Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(updateMotion), userInfo: nil,repeats: true)
@@ -110,55 +116,84 @@ class SinglePlayer: UIViewController {
             
             if accel.z > 2.5 || orientation.yaw > 1.0 || orientation.yaw < -1.0
             {
-                self.submitSelection(accel)
+                if(answerASelect == true)
+                {
+                     self.submitSelection(buttonA.tag)
+                }
+                else if(answerBSelect == true)
+                {
+                    self.submitSelection(buttonB.tag)
+                }
+                else if(answerCSelect == true)
+                {
+                    self.submitSelection(buttonB.tag)
+                }
+                else if(answerDSelect == true)
+                {
+                    self.submitSelection(buttonB.tag)
+                }
+                
                 return
             }
             if rotate.x < -3.0
             {
                 clearButtonBorders()
+                clearSelection()
                 if(buttonC.layer.borderColor == UIColor.red.cgColor )
                 {
+                    
                     buttonA.layer.borderColor = UIColor.red.cgColor
+                    answerASelect = true
                 }
                 else if(buttonD.layer.borderColor == UIColor.red.cgColor)
                 {
                     buttonB.layer.borderColor = UIColor.red.cgColor
+                    answerBSelect = true
                 }
             }
             else if rotate.x > 3.0
             {
                 clearButtonBorders()
+                  clearSelection()
                 if(buttonA.layer.borderColor == UIColor.red.cgColor )
                 {
                     buttonC.layer.borderColor = UIColor.red.cgColor
+                    answerCSelect = true
                 }
                 else if(buttonB.layer.borderColor == UIColor.red.cgColor)
                 {
                     buttonD.layer.borderColor = UIColor.red.cgColor
+                    answerDSelect = true
                 }
             }
             else if rotate.y < -3.0
             {
                 clearButtonBorders()
+                  clearSelection()
                 if(buttonB.layer.borderColor == UIColor.red.cgColor )
                 {
                     buttonA.layer.borderColor = UIColor.red.cgColor
+                    answerASelect = true
                 }
                 else if(buttonD.layer.borderColor == UIColor.red.cgColor)
                 {
                     buttonC.layer.borderColor = UIColor.red.cgColor
+                    answerCSelect = true
                 }
             }
             else if rotate.y > 3.0
             {
                 clearButtonBorders()
+                  clearSelection()
                 if(buttonA.layer.borderColor == UIColor.red.cgColor )
                 {
                     buttonB.layer.borderColor = UIColor.red.cgColor
+                    answerBSelect = true
                 }
                 else if(buttonC.layer.borderColor == UIColor.red.cgColor)
                 {
                     buttonD.layer.borderColor = UIColor.red.cgColor
+                    answerDSelect = true
                 }
             }
         }
@@ -172,18 +207,28 @@ class SinglePlayer: UIViewController {
             {
             case 0:
                 clearButtonBorders()
+                clearSelection()
                 buttonA.layer.borderColor = UIColor.red.cgColor
+                answerASelect = true
+                
             case 1:
                 clearButtonBorders()
+                clearSelection()
                 buttonB.layer.borderColor = UIColor.red.cgColor
+                answerBSelect = true
             case 2:
                 clearButtonBorders()
+                clearSelection()
                 buttonC.layer.borderColor = UIColor.red.cgColor
+                answerCSelect = true
             case 3:
                 clearButtonBorders()
+                clearSelection()
                 buttonD.layer.borderColor = UIColor.red.cgColor
+                answerDSelect = true
             default:
                 clearButtonBorders()
+                clearSelection()
             }
            // self.checkAnswer(selectedButton: rand)
         }
@@ -381,7 +426,13 @@ class SinglePlayer: UIViewController {
         buttonD.isEnabled = true
     }
     
-    
+    func clearSelection()
+    {
+        answerASelect = false
+        answerBSelect = false
+        answerCSelect = false
+        answerDSelect = false
+    }
     
     @objc func updateTimer()
     {
