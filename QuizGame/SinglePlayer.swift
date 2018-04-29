@@ -109,7 +109,7 @@ class SinglePlayer: UIViewController {
         actionTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(updateMotion), userInfo: nil,repeats: true)
         seconds = 20
     }
-    //Tried to write motion, needs testing, Can't know whats wrong yet
+   
     @objc func updateMotion(){
         time = 3
         if let user = motionManager.deviceMotion{
@@ -230,7 +230,7 @@ class SinglePlayer: UIViewController {
             }
         }
     }
-    
+    //Currently doesnt work
     override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
         //Randomize selection when shaking
         var rand = Int(arc4random_uniform(3))

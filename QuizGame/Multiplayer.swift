@@ -29,20 +29,45 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
     var questionsTopic: String!
     var currentQuestionNumber: Int!
     
+     var img = Int()
     
     //Json parsing
     var currentUrlString = String()
     
     //players
     var players =  [Player]()
+    var playerCount = Int()
+
     
     @IBAction func connect(_ sender: Any) {
          present(browser, animated: true, completion: nil)
+        
        
-      
-    
     }
-    
+    @objc func sendData()
+    {
+        self.updatePlayers(number: img,id: peerID)
+        if( player2.isHidden == false)
+        {
+            img = player2.tag
+        }
+        else if( player3.isHidden == false)
+        {
+            img = player3.tag
+        }
+        else if( player4.isHidden == false)
+        {
+            img = player4.tag
+        }
+        let dataToSend =  NSKeyedArchiver.archivedData(withRootObject: img)
+        do{
+            try session.send(dataToSend, toPeers: session.connectedPeers, with: .unreliable)
+            
+        }
+        catch let err {
+            //print("Error in sending data \(err)")
+        }
+    }
     @IBAction func start(_ sender: Any) {
         if  canStart() == false {
             print("Can't start")
@@ -59,7 +84,16 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
     
     func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
         dismiss(animated: true, completion: nil)
-        updatePlayers(id: peerID)
+        sendData()
+        playerCount += 1
+        let dataToSend =  NSKeyedArchiver.archivedData(withRootObject: playerCount)
+        do{
+            try session.send(dataToSend, toPeers: session.connectedPeers, with: .unreliable)
+            
+        }
+        catch let err {
+            //print("Error in sending data \(err)")
+        }
      
     }
     
@@ -67,26 +101,51 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         dismiss(animated: true, completion: nil)
         
     }
-    func updatePlayers( id: MCPeerID){
-        if id == peerID
+    func updatePlayers( number: Int,id: MCPeerID){
+        
+      img = number
+        
+       
+        if player1.isHidden == false && player2.isHidden == true
         {
-            
+            player2.isHidden = false
+            img = player2.tag
         }
-        else
+        else if player1.isHidden == false && player3.isHidden == true
         {
-            self.player2.image = UIImage(named: "yellow")
+             player3.isHidden = false
+            img = player3.tag
         }
+        else if player1.isHidden == false && player4.isHidden == true
+        {
+             player4.isHidden = false
+           img =  player4.tag
+        }
+       
+       
+        
     }
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        
+        switch state {
+        case MCSessionState.connected:
+            print("Connected: \(peerID.displayName)")
+            
+        case MCSessionState.connecting:
+            print("Connecting: \(peerID.displayName)")
+            
+        case MCSessionState.notConnected:
+            print("Not Connected: \(peerID.displayName)")
+        }
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         
         DispatchQueue.main.async(execute: {
             //let playerIndex = (self.getPlayerIndex(by:peerID))!
-            if let receivedString = NSKeyedUnarchiver.unarchiveObject(with: data) as? String {
-               
+           
+            if let receivedString = NSKeyedUnarchiver.unarchiveObject(with: data) as? Int {
+                self.updatePlayers(number: receivedString, id: peerID)
+                print(receivedString)
             }
         })
     }
@@ -108,17 +167,21 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         super.viewDidLoad()
         let context = CIContext(options: nil)
         //Gray Filtering
-        let currentFilter = CIFilter(name: "CIPhotoEffectNoir")
+        /*let currentFilter = CIFilter(name: "CIPhotoEffectNoir")
         currentFilter!.setValue(CIImage(image: player2.image!), forKey: kCIInputImageKey)
         let output = currentFilter!.outputImage
         let cgImg = context.createCGImage(output!, from: output!.extent)
-        let process = UIImage(cgImage: cgImg!)
+        let process = UIImage(cgImage: cgImg!)*/
         
-        player2.image = process //Grays player 2
+       // player2.image = process //Grays player 2
         
-        player3.image = process //Grays player 3
+       // player3.image = process //Grays player 3
         
-        player4.image = process //Grays player 4
+       // player4.image = process //Grays player 4
+        player1.isHidden = false
+        player2.isHidden = true
+        player3.isHidden = true
+        player4.isHidden = true
         self.peerID = MCPeerID(displayName: UIDevice.current.name)
         self.session = MCSession(peer: peerID)
         self.browser = MCBrowserViewController(serviceType: "chat", session: session)
@@ -128,6 +191,7 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         session.delegate = self
         browser.delegate = self
         
+        playerCount = 1
         
     }
     
