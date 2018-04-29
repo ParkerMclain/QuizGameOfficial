@@ -86,14 +86,7 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         dismiss(animated: true, completion: nil)
         sendData()
         playerCount += 1
-        let dataToSend =  NSKeyedArchiver.archivedData(withRootObject: playerCount)
-        do{
-            try session.send(dataToSend, toPeers: session.connectedPeers, with: .unreliable)
-            
-        }
-        catch let err {
-            //print("Error in sending data \(err)")
-        }
+        
      
     }
     
@@ -109,16 +102,19 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         if player1.isHidden == false && player2.isHidden == true
         {
             player2.isHidden = false
+            playerCount += 1
             img = player2.tag
         }
         else if player1.isHidden == false && player3.isHidden == true
         {
              player3.isHidden = false
+            playerCount += 1
             img = player3.tag
         }
         else if player1.isHidden == false && player4.isHidden == true
         {
              player4.isHidden = false
+            playerCount += 1
            img =  player4.tag
         }
        
@@ -146,6 +142,10 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
             if let receivedString = NSKeyedUnarchiver.unarchiveObject(with: data) as? Int {
                 self.updatePlayers(number: receivedString, id: peerID)
                 print(receivedString)
+                if receivedString == self.playerCount
+                {
+                    self.playerCount = receivedString
+                }
             }
         })
     }
