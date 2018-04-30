@@ -69,13 +69,9 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         }
     }
     @IBAction func start(_ sender: Any) {
-        if  canStart() == false {
-            print("Can't start")
-        }
-        else
-        {
-            self.performSegue(withIdentifier: "MultiplayerGame", sender: self)
-        }
+        
+            self.performSegue(withIdentifier: "MultiGame", sender: self)
+        
     }
     
     func canStart() -> Bool{
