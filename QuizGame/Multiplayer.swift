@@ -687,9 +687,15 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         player4Label.text = ""
     }
     
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        score = 0
+        possibleScore = 0
+        gameTimer.invalidate()
+        motionManager.stopDeviceMotionUpdates()
+    }
     func endGame()
     {
+          motionManager.stopDeviceMotionUpdates()
         gameEnded = true
         restartButton.isHidden = false
         print("No more questions!")

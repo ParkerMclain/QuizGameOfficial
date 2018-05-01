@@ -423,6 +423,7 @@ class SinglePlayer: UIViewController {
     
     func endGame()
     {
+          motionManager.stopDeviceMotionUpdates()
         gameEnded = true
         restartButton.isHidden = false
         print("No more questions!")
