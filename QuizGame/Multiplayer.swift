@@ -705,7 +705,7 @@ class Multiplayer: UIViewController ,MCBrowserViewControllerDelegate, MCSessionD
         
         if score > 0
         {
-            timerNotificationLabel.text = "YOU WON!"
+            timerNotificationLabel.text = "YOU WON! You scored \(score!)/\(possibleScore)"
         }
         else
         {
